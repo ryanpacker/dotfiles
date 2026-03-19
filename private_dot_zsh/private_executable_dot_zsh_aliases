@@ -1,0 +1,17 @@
+alias ll='ls -lFa'
+alias sp='source ${ZDOTDIR:-$HOME}/.zshrc'
+alias editrc='atom ${ZDOTDIR:-$HOME}/.zshrc'
+alias editaliases='atom ${ZDOTDIR:-$HOME}/.zsh_aliases'
+
+alias sf='php bin/console'
+alias sy='symfony'
+alias syc='symfony console'
+alias sftest='php bin/phpunit'
+
+alias fit2csv='java -jar /usr/local/bin/FitCSVTool.jar'
+
+# SSH aliases
+alias m1mm='TERM=xterm-256color ssh rpacker@10.10.2.213'
+
+# Claude Code
+alias cc='claude --dangerously-skip-permissions'

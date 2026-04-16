@@ -18,16 +18,20 @@ brew "symfony-cli/tap/symfony-cli"
 cask "font-source-code-pro"
 cask "font-jetbrains-mono"
 
-# Core apps
+# Apps — always install
 cask "1password"
-cask "google-chrome"
 cask "visual-studio-code"
-cask "zoom"
 cask "ghostty"
 cask "dropbox"
 cask "google-drive"
-cask "microsoft-office"
 cask "adobe-creative-cloud"
+
+{{ if not .isWork -}}
+# Apps typically managed by JAMF on work machines
+cask "google-chrome"
+cask "zoom"
+cask "microsoft-office"
+{{ end -}}
 
 {{ if not .isWork -}}
 # Personal only

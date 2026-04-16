@@ -3,10 +3,10 @@
 echo "Configuring macOS..."
 
 # Hostname
-sudo scutil --set ComputerName {{ .hostname | quote }}
-sudo scutil --set LocalHostName {{ .hostname | quote }}
-sudo scutil --set HostName {{ .hostname | quote }}
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string {{ .hostname | quote }}
+sudo scutil --set ComputerName {{ .computerName | quote }}
+sudo scutil --set LocalHostName {{ .localHostName | quote }}
+sudo scutil --set HostName {{ .localHostName | quote }}
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string {{ .localHostName | quote }}
 
 # Trackpad: tap to click
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true

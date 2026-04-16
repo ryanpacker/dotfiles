@@ -1,5 +1,6 @@
 {{- /* Machine identity */ -}}
-{{- $hostname := promptStringOnce . "hostname" "Computer hostname" -}}
+{{- $computerName := promptStringOnce . "computerName" "Computer name (friendly, e.g. Ryan's 2026 MacBook Pro)" -}}
+{{- $localHostName := promptStringOnce . "localHostName" "Local hostname (no spaces, e.g. Ryans-2026-MBP)" -}}
 {{- $isWork := promptBoolOnce . "isWork" "Is this a work machine" -}}
 
 {{- /* User identity */ -}}
@@ -19,7 +20,8 @@
 {{- end -}}
 
 [data]
-    hostname = {{ $hostname | quote }}
+    computerName = {{ $computerName | quote }}
+    localHostName = {{ $localHostName | quote }}
     isWork = {{ $isWork }}
     fullName = {{ $fullName | quote }}
     email = {{ $email | quote }}

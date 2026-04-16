@@ -72,7 +72,7 @@ Prompted during `chezmoi init` (stored locally, never committed):
 - git
 - Node.js / npm
 - Speedtest CLI
-- Claude Code (installed via Homebrew cask `claude-code`; provides the `claude` binary)
+- Claude Code (installed via Anthropic's native installer to `~/.local/bin/claude`; auto-updates in the background — Homebrew cask is intentionally avoided because it lags behind upstream releases)
 - Xcode Command Line Tools (via run_once script, not Brewfile)
 
 ## Dev Stack

@@ -63,7 +63,8 @@ either file.
 3. Dotfiles applied (`.zshenv`, `.zsh/*`, `.gitconfig`, `.config/ghostty/config`, `.Brewfile`)
 4. `run_once_20-configure-macos.sh.tmpl` — hostname, trackpad, dock, hot corners, Finder
 5. `run_onchange_after_10-install-packages.sh.tmpl` — `brew bundle --global --no-upgrade`
-6. `run_once_after_90-manual-checklist.sh.tmpl` — prints remaining manual steps
+6. `run_once_after_15-install-claude-code.sh` — Claude Code via native installer (not brew, to avoid version lag)
+7. `run_once_after_90-manual-checklist.sh.tmpl` — prints remaining manual steps
 
 Order matters: Homebrew must exist before the Brewfile runs; `.Brewfile` must
 be in place before `brew bundle --global` reads it; macOS defaults run after

@@ -23,7 +23,8 @@ cask "1password"
 cask "ghostty"
 cask "visual-studio-code"
 cask "cursor"
-cask "claude-code"
+# Note: Claude Code intentionally NOT installed here. See
+# run_once_after_15-install-claude-code.sh for why.
 
 {{ if not .isWork -}}
 # All other GUI apps — skip on work machines to avoid JAMF conflicts

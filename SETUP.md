@@ -72,6 +72,7 @@ Prompted during `chezmoi init` (stored locally, never committed):
 - git
 - Node.js / npm
 - Speedtest CLI
+- Claude Code (installed via Homebrew cask `claude-code`; provides the `claude` binary)
 - Xcode Command Line Tools (via run_once script, not Brewfile)
 
 ## Dev Stack
@@ -114,6 +115,7 @@ These are presented as a checklist after `chezmoi apply` completes:
 - Enable iCloud Messages sync
 - Sign in to 1Password, Chrome, Creative Cloud
 - Sign in to Cursor (OAuth — can't be automated)
+- Run `claude` and sign in (OAuth — can't be automated)
 - Run `gh auth login`
 - Set up Canon printers with accounting codes
 - Install Canon Print & Layout

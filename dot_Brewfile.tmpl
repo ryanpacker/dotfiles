@@ -18,23 +18,19 @@ brew "symfony-cli/tap/symfony-cli"
 cask "font-source-code-pro"
 cask "font-jetbrains-mono"
 
-# Apps — always install
-cask "1password"
-cask "visual-studio-code"
+# Developer apps — safe on work machines (JAMF won't manage these)
 cask "ghostty"
-cask "dropbox"
-cask "google-drive"
-cask "adobe-creative-cloud"
+cask "visual-studio-code"
 
 {{ if not .isWork -}}
-# Apps typically managed by JAMF on work machines
+# All other GUI apps — skip on work machines to avoid JAMF conflicts
+cask "1password"
 cask "google-chrome"
 cask "zoom"
+cask "dropbox"
+cask "google-drive"
 cask "microsoft-office"
-{{ end -}}
-
-{{ if not .isWork -}}
-# Personal only
+cask "adobe-creative-cloud"
 cask "obs"
 cask "google-earth-pro"
 {{ end -}}

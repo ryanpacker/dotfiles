@@ -2,11 +2,14 @@
 
 echo "Configuring macOS..."
 
-# Hostname
+{{ if not .isBHR -}}
+# Hostname (skipped on BambooHR machines — Jamf enforces its own naming
+# convention and reverts any changes we make, so don't bother fighting it)
 sudo scutil --set ComputerName {{ .computerName | quote }}
 sudo scutil --set LocalHostName {{ .localHostName | quote }}
 sudo scutil --set HostName {{ .localHostName | quote }}
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string {{ .localHostName | quote }}
+{{ end -}}
 
 # Trackpad: tap to click
 defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true

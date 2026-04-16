@@ -76,6 +76,7 @@ Populated by [.chezmoi.toml.tmpl](.chezmoi.toml.tmpl) on `chezmoi init`:
 
 - `.computerName`, `.localHostName` — default to current `scutil` values
 - `.isWork` — gates JAMF-managed apps (Chrome, Zoom, Office) off work machines
+- `.isBHR` — narrower flag for BambooHR-managed machines (only prompted when `.isWork`); gates things where BHR's Jamf actively fights us (e.g. hostname — Jamf enforces its own naming and reverts ours)
 - `.fullName`, `.email` — git identity
 - `.nasIP`, `.nasUser`, `.forgejoDomain` — personal only
 - `.install3DPrinting` — personal only, gates Prusa Slicer + Fusion

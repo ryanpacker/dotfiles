@@ -27,6 +27,7 @@ Prompted during `chezmoi init` (stored locally, never committed):
 
 - Computer hostname
 - Work vs personal machine
+- BambooHR-managed machine (only asked on work machines; controls Jamf-aware behavior like skipping hostname configuration)
 - Full name and email (for git)
 - NAS IP and SSH username (personal only)
 - Forgejo domain (personal only)
@@ -95,7 +96,7 @@ Prompted during `chezmoi init` (stored locally, never committed):
 - Dock: autohide, tile size 48, magnification on, hide recent apps
 - Hot corners: top-left = screen saver, bottom-right = quick note
 - Finder: show path bar, show status bar, show all file extensions
-- Computer hostname: set from prompted value
+- Computer hostname: set from prompted value (skipped on BambooHR machines — Jamf enforces its own naming convention and overwrites any changes)
 
 ## Deferred / TODO
 

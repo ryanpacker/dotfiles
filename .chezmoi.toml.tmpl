@@ -15,6 +15,14 @@
 
 {{- $isWork := promptBoolOnce . "isWork" "Is this a work machine" -}}
 
+{{- /* BambooHR is a sub-classification of a work machine. It's prompted
+       separately because BHR's Jamf enforces things like hostname naming
+       that we need to skip rather than fight. */ -}}
+{{- $isBHR := false -}}
+{{- if $isWork -}}
+{{-   $isBHR = promptBoolOnce . "isBHR" "Is this a BambooHR-managed machine" -}}
+{{- end -}}
+
 {{- /* User identity */ -}}
 {{- $fullName := promptStringOnce . "fullName" "Full name (for git)" -}}
 {{- $email := promptStringOnce . "email" "Email address (for git)" -}}
@@ -39,6 +47,7 @@
     computerName = {{ $computerName | quote }}
     localHostName = {{ $localHostName | quote }}
     isWork = {{ $isWork }}
+    isBHR = {{ $isBHR }}
     fullName = {{ $fullName | quote }}
     email = {{ $email | quote }}
     nasIP = {{ $nasIP | quote }}

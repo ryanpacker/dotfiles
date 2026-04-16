@@ -1,0 +1,29 @@
+{{- /* Machine identity */ -}}
+{{- $hostname := promptStringOnce . "hostname" "Computer hostname" -}}
+{{- $isWork := promptBoolOnce . "isWork" "Is this a work machine" -}}
+
+{{- /* User identity */ -}}
+{{- $fullName := promptStringOnce . "fullName" "Full name (for git)" -}}
+{{- $email := promptStringOnce . "email" "Email address (for git)" -}}
+
+{{- /* Personal machine options */ -}}
+{{- $nasIP := "" -}}
+{{- $nasUser := "" -}}
+{{- $forgejoDomain := "" -}}
+{{- $install3DPrinting := false -}}
+{{- if not $isWork -}}
+{{-   $nasIP = promptStringOnce . "nasIP" "NAS IP address" -}}
+{{-   $nasUser = promptStringOnce . "nasUser" "NAS SSH username" -}}
+{{-   $forgejoDomain = promptStringOnce . "forgejoDomain" "Forgejo domain (e.g., forge.example.com)" -}}
+{{-   $install3DPrinting = promptBoolOnce . "install3DPrinting" "Install 3D printing tools (Prusa Slicer, Fusion 360)" -}}
+{{- end -}}
+
+[data]
+    hostname = {{ $hostname | quote }}
+    isWork = {{ $isWork }}
+    fullName = {{ $fullName | quote }}
+    email = {{ $email | quote }}
+    nasIP = {{ $nasIP | quote }}
+    nasUser = {{ $nasUser | quote }}
+    forgejoDomain = {{ $forgejoDomain | quote }}
+    install3DPrinting = {{ $install3DPrinting }}

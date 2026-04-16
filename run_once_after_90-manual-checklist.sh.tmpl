@@ -1,0 +1,42 @@
+#!/bin/bash
+
+echo ""
+echo "=========================================="
+echo "    Manual Setup Steps Remaining"
+echo "=========================================="
+echo ""
+echo "Authentication:"
+echo "  [ ] Sign in to Apple ID (System Settings → Apple ID)"
+echo "  [ ] Sign in to 1Password"
+echo "  [ ] Sign in to Google Chrome"
+echo "  [ ] Sign in to Creative Cloud"
+echo "  [ ] Run: gh auth login"
+echo ""
+echo "Apple Services:"
+echo "  [ ] Set up Apple Pay"
+echo "  [ ] Enable iCloud Messages sync"
+echo ""
+echo "Hardware:"
+echo "  [ ] Set up Canon printers with accounting codes"
+echo "  [ ] Install Canon Print & Layout"
+{{ if ne .nasIP "" -}}
+echo "  [ ] Connect to NAS ({{ .nasIP }})"
+{{ else -}}
+echo "  [ ] Connect to NAS"
+{{ end -}}
+echo ""
+echo "Personalization:"
+echo "  [ ] Arrange dock icons"
+echo "  [ ] Configure widgets"
+echo "  [ ] Set display scaling (System Settings → Displays)"
+echo "  [ ] Set lock screen timeout"
+{{ if not .isWork -}}
+echo ""
+echo "Personal Machine:"
+echo "  [ ] Set up Google Earth iCloud sync"
+echo "  [ ] Configure OBS scenes and profiles"
+{{ end -}}
+echo ""
+echo "=========================================="
+echo ""
+read -p "Press Enter to acknowledge..."

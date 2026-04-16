@@ -1,0 +1,38 @@
+autoload -Uz vcs_info
+precmd() { vcs_info }
+zstyle ':vcs_info:git:*' formats ' %F{green}(%b)%f'
+zstyle ':vcs_info:*' enable git
+
+setopt PROMPT_SUBST
+PROMPT='%F{238}─────────────────────────────────
+%F{024}%D{%a %b %d} %*%(?.%F{green} ✓.%F{red} ✗)%f
+%F{024}%n@%m%f${vcs_info_msg_0_}
+%F{024}%~%f
+%F{238}─────────────────────────────────
+%f%# '
+
+# Homebrew
+if [ -f /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# uv
+export PATH="$HOME/.local/bin:$PATH"
+
+# bun
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+# pyenv
+if [ -d "$HOME/.pyenv" ]; then
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/shims:$PATH"
+    eval "$(pyenv init --path)"
+    eval "$(pyenv init -)"
+fi
+
+# Aliases
+source $ZDOTDIR/.zsh_aliases

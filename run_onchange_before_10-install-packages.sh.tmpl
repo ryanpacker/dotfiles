@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+# Brewfile hash: {{ include "dot_Brewfile.tmpl" | sha256sum }}
+
+eval "$(/opt/homebrew/bin/brew shellenv)"
+brew bundle --global --no-lock --no-upgrade

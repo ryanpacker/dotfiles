@@ -1,0 +1,42 @@
+tap "symfony-cli/tap"
+
+# CLI tools
+brew "chezmoi"
+brew "gh"
+brew "git"
+brew "node"
+brew "speedtest-cli"
+
+# Dev tools
+brew "pyenv"
+brew "php"
+brew "postgresql@16"
+brew "rabbitmq"
+brew "symfony-cli/tap/symfony-cli"
+
+# Fonts
+cask "font-source-code-pro"
+cask "font-jetbrains-mono"
+
+# Core apps
+cask "1password"
+cask "google-chrome"
+cask "visual-studio-code"
+cask "zoom"
+cask "ghostty"
+cask "dropbox"
+cask "google-drive"
+cask "microsoft-office"
+cask "adobe-creative-cloud"
+
+{{ if not .isWork -}}
+# Personal only
+cask "obs"
+cask "google-earth-pro"
+{{ end -}}
+
+{{ if .install3DPrinting -}}
+# 3D printing
+cask "prusaslicer"
+cask "autodesk-fusion"
+{{ end -}}

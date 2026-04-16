@@ -1,6 +1,18 @@
-{{- /* Machine identity */ -}}
-{{- $computerName := promptStringOnce . "computerName" "Computer name (friendly, e.g. Ryan's 2026 MacBook Pro)" -}}
-{{- $localHostName := promptStringOnce . "localHostName" "Local hostname (no spaces, e.g. Ryans-2026-MBP)" -}}
+{{- /* Machine identity — default to current system values */ -}}
+{{- $computerName := "" -}}
+{{- if hasKey . "computerName" -}}
+{{-   $computerName = .computerName -}}
+{{- else -}}
+{{-   $computerName = promptString "Computer name (friendly)" (output "scutil" "--get" "ComputerName" | trim) -}}
+{{- end -}}
+
+{{- $localHostName := "" -}}
+{{- if hasKey . "localHostName" -}}
+{{-   $localHostName = .localHostName -}}
+{{- else -}}
+{{-   $localHostName = promptString "Local hostname (no spaces)" (output "scutil" "--get" "LocalHostName" | trim) -}}
+{{- end -}}
+
 {{- $isWork := promptBoolOnce . "isWork" "Is this a work machine" -}}
 
 {{- /* User identity */ -}}
@@ -14,7 +26,11 @@
 {{- $install3DPrinting := false -}}
 {{- if not $isWork -}}
 {{-   $nasIP = promptStringOnce . "nasIP" "NAS IP address" -}}
-{{-   $nasUser = promptStringOnce . "nasUser" "NAS SSH username" -}}
+{{-   if hasKey . "nasUser" -}}
+{{-     $nasUser = .nasUser -}}
+{{-   else -}}
+{{-     $nasUser = promptString "NAS SSH username" .chezmoi.username -}}
+{{-   end -}}
 {{-   $forgejoDomain = promptStringOnce . "forgejoDomain" "Forgejo domain (e.g., forge.example.com)" -}}
 {{-   $install3DPrinting = promptBoolOnce . "install3DPrinting" "Install 3D printing tools (Prusa Slicer, Fusion 360)" -}}
 {{- end -}}

@@ -47,6 +47,7 @@ Prompted during `chezmoi init` (stored locally, never committed):
 - Google Chrome
 - 1Password
 - Visual Studio Code
+- Cursor
 - Zoom
 - Ghostty
 - Dropbox
@@ -112,6 +113,7 @@ These are presented as a checklist after `chezmoi apply` completes:
 - Set up Apple Pay
 - Enable iCloud Messages sync
 - Sign in to 1Password, Chrome, Creative Cloud
+- Sign in to Cursor (OAuth — can't be automated)
 - Run `gh auth login`
 - Set up Canon printers with accounting codes
 - Install Canon Print & Layout

@@ -26,18 +26,41 @@ defaults write com.apple.dock magnification -bool true
 defaults write com.apple.dock show-recents -bool false
 
 # Hot corners
+# Top-left: start screen saver (5)
 defaults write com.apple.dock wvous-tl-corner -int 5
 defaults write com.apple.dock wvous-tl-modifier -int 0
-defaults write com.apple.dock wvous-br-corner -int 14
+# Bottom-right: disable screen saver / stay awake (6)
+defaults write com.apple.dock wvous-br-corner -int 6
 defaults write com.apple.dock wvous-br-modifier -int 0
 
-# Finder
+# Finder: column view + extras
+defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
 defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
 defaults write NSGlobalDomain AppleShowAllExtensions -bool true
 
+# Screensaver: require password 2 seconds after screensaver/sleep begins
+defaults write com.apple.screensaver askForPassword -int 1
+defaults write com.apple.screensaver askForPasswordDelay -int 2
+
+# Desktop widgets: best-effort clear. The per-user widget store lives in
+# ~/Library/Containers/com.apple.chronod — deleting its state DB removes
+# any widgets set up by the Setup Assistant or migrated from a prior Mac.
+# Safe to run even if the path doesn't exist.
+rm -f "$HOME/Library/Containers/com.apple.chronod/Data/Library/Preferences/com.apple.chronod.plist" 2>/dev/null || true
+killall chronod 2>/dev/null || true
+
+# Default browser: Chrome. Skipped on BambooHR machines where Chrome comes
+# from JAMF and may not be installed yet when this script runs.
+{{ if not .isBHR -}}
+if command -v defaultbrowser >/dev/null 2>&1; then
+    defaultbrowser chrome 2>/dev/null || echo "  (defaultbrowser: Chrome not yet installed or user-confirmation needed — set manually)"
+fi
+{{ end -}}
+
 # Restart affected apps
 killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
+killall SystemUIServer 2>/dev/null || true
 
 echo "macOS configured."

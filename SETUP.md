@@ -142,11 +142,9 @@ settings unless noted.
 
 - Trackpad: tap to click enabled
 - Mouse scroll direction: traditional (not natural)
-- Disable notifications for Notes.app
-- Finder: default view = column view (3-column), show path bar, show status bar, show all file extensions
-- Unlock with Apple Watch: enabled
-- Remove any default desktop widgets
-- Set Google Chrome as the default browser (via `defaultbrowser`)
+- Finder: default view = column view, show path bar, show status bar, show all file extensions
+- Remove any default desktop widgets (clears the per-user widget store so the desktop starts clean)
+- Set Google Chrome as the default browser (via `defaultbrowser`; skipped on BambooHR machines where JAMF owns Chrome)
 - Dock: autohide, tile size 48, magnification on, hide recent apps
 - Hot corners: top-left = start screen saver, bottom-right = disable screen saver / stay awake (code 6)
 - Screensaver: require password 2 seconds after screensaver/sleep begins
@@ -182,6 +180,8 @@ These are intentional TODOs — decide the specifics, then fold them in.
 These are presented as a checklist after `chezmoi apply` completes.
 
 - Set up Apple Pay
+- Disable notifications for Notes.app (System Settings → Notifications → Notes → Allow Notifications off — modern macOS doesn't expose a reliable `defaults` key for this)
+- Enable Unlock with Apple Watch (System Settings → Touch ID & Password — requires a paired Apple Watch and can't be scripted)
 - Install 1Password browser extensions in Safari and Chrome, then sign in to 1Password
 - Sign in to Google Chrome profiles and enable sync
 - Sign in to Adobe Creative Cloud (and choose the specific apps to install)

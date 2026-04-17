@@ -61,28 +61,31 @@ either file.
 1. `run_once_before_01-install-xcode-cli-tools.sh` — Xcode CLI (blocking wait)
 2. `run_once_before_02-install-homebrew.sh` — Homebrew
 3. Dotfiles applied (`.zshenv`, `.zsh/*`, `.gitconfig`, `.config/ghostty/config`, `.Brewfile`)
-4. `run_once_20-configure-macos.sh.tmpl` — hostname, trackpad, dock, hot corners, Finder
+4. `run_once_20-configure-macos.sh.tmpl` — hostname, trackpad, dock, hot corners, Finder, screensaver, widgets clear, default browser
 5. `run_onchange_after_10-install-packages.sh.tmpl` — `brew bundle --global --no-upgrade`
 6. `run_once_after_15-install-claude-code.sh` — Claude Code via native installer (not brew, to avoid version lag)
-7. `run_once_after_90-manual-checklist.sh.tmpl` — prints remaining manual steps
+7. `run_once_after_30-post-install.sh` — Screenshots dir + screencapture location, dockutil stack pins, Google Earth iCloud symlink
+8. `run_once_after_90-manual-checklist.sh.tmpl` — prints remaining manual steps
 
 Order matters: Homebrew must exist before the Brewfile runs; `.Brewfile` must
 be in place before `brew bundle --global` reads it; macOS defaults run after
-dotfiles to avoid conflicts.
+dotfiles to avoid conflicts; the post-install script runs after the Brewfile
+so `dockutil`/`defaultbrowser` are on PATH.
 
 ## Template data
 
 Populated by [.chezmoi.toml.tmpl](.chezmoi.toml.tmpl) on `chezmoi init`:
 
 - `.computerName`, `.localHostName` — default to current `scutil` values
-- `.isWork` — gates JAMF-managed apps (Chrome, Zoom, Office) off work machines
-- `.isBHR` — narrower flag for BambooHR-managed machines (only prompted when `.isWork`); gates things where BHR's Jamf actively fights us (e.g. hostname — Jamf enforces its own naming and reverts ours)
+- `.isWork` — rough work/personal toggle
+- `.isBHR` — narrower flag for BambooHR-managed machines (only prompted when `.isWork`). Gates anything where BHR's Jamf actively fights us or deploys its own copy: hostname (Jamf overwrites ours), Chrome/Drive/Office/Slack/Zoom installs (Jamf-deployed, brew would cause version drift), and the Chrome-as-default-browser step.
 - `.fullName`, `.email` — git identity
-- `.nasIP`, `.nasUser`, `.forgejoDomain` — personal only
-- `.install3DPrinting` — personal only, gates Prusa Slicer + Fusion
+- `.nasIP`, `.nasUser`, `.forgejoDomain` — prompted on all machines; blank is fine and skips the corresponding sections in templates/scripts
 
 When adding a conditional install, use the existing gates instead of
-inventing new ones unless the category is genuinely new.
+inventing new ones unless the category is genuinely new. `.install3DPrinting`
+used to exist; it was dropped when Prusa Slicer and Fusion moved to
+install-everywhere.
 
 ## Files ignored by chezmoi
 

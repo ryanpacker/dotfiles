@@ -33,11 +33,13 @@ defaults write com.apple.dock wvous-tl-modifier -int 0
 defaults write com.apple.dock wvous-br-corner -int 6
 defaults write com.apple.dock wvous-br-modifier -int 0
 
-# Finder: column view + extras
+# Finder: column view + extras. Leave AppleShowAllExtensions at the macOS
+# default (false) so .app bundles and other extension-hiding opt-outs render
+# without their extension in Finder.
 defaults write com.apple.finder FXPreferredViewStyle -string "clmv"
 defaults write com.apple.finder ShowPathbar -bool true
 defaults write com.apple.finder ShowStatusBar -bool true
-defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+defaults write NSGlobalDomain AppleShowAllExtensions -bool false
 
 # Screensaver: require password 2 seconds after screensaver/sleep begins
 defaults write com.apple.screensaver askForPassword -int 1

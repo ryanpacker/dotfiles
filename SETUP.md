@@ -72,6 +72,7 @@ anything in the "Skipped on BambooHR Machines" opt-out list below.
 - Google Chrome
 - Google Drive
 - Google Earth Pro
+- Granola (AI-powered meeting notepad)
 - Microsoft Office
 - OBS (install only; scenes/profiles configured separately)
 - Prusa Slicer
@@ -142,7 +143,7 @@ settings unless noted.
 
 - Trackpad: tap to click enabled
 - Mouse scroll direction: traditional (not natural)
-- Finder: default view = column view, show path bar, show status bar, show all file extensions
+- Finder: default view = column view, show path bar, show status bar (filename extensions stay at the macOS default — hidden for `.app` bundles and other apps that opt out, shown otherwise)
 - Remove any default desktop widgets (clears the per-user widget store so the desktop starts clean)
 - Set Google Chrome as the default browser (via `defaultbrowser`; skipped on BambooHR machines where JAMF owns Chrome)
 - Dock: autohide, tile size 48, magnification on, hide recent apps
@@ -197,3 +198,7 @@ These are presented as a checklist after `chezmoi apply` completes.
 - Set lock screen timeout
 - Arrange additional dock icons beyond what the script pins
 - Configure desktop widgets (if you want any after the script clears them)
+
+## To Add
+
+These are tasks that need to be evaluated to determine where they should be placed in the flow. They should be removed from the list below once they are added to the right place above.

@@ -1,11 +1,15 @@
 tap "symfony-cli/tap"
+tap "teamookla/speedtest"
 
 # CLI tools
 brew "chezmoi"
 brew "gh"
 brew "git"
 brew "node"
-brew "speedtest-cli"
+brew "teamookla/speedtest/speedtest"
+brew "mas"
+brew "dockutil"
+brew "defaultbrowser"
 
 # Dev tools
 brew "pyenv"
@@ -18,28 +22,37 @@ brew "symfony-cli/tap/symfony-cli"
 cask "font-source-code-pro"
 cask "font-jetbrains-mono"
 
-# Apps safe on work machines (not JAMF-managed)
+# Apps — all machines
 cask "1password"
-cask "ghostty"
-cask "visual-studio-code"
+cask "adobe-creative-cloud"
+cask "autodesk-fusion"
+cask "bambu-studio"
+cask "claude"
 cask "cursor"
+cask "dropbox"
+cask "ghostty"
+cask "google-earth-pro"
+cask "obs"
+cask "prusaslicer"
+cask "t3-code"
+cask "visual-studio-code"
+cask "wispr-flow"
 # Note: Claude Code intentionally NOT installed here. See
 # run_once_after_15-install-claude-code.sh for why.
+# Note: Canon Professional Print & Layout has no Homebrew cask — install manually.
 
-{{ if not .isWork -}}
-# All other GUI apps — skip on work machines to avoid JAMF conflicts
+{{ if not .isBHR -}}
+# Apps JAMF deploys on BHR machines — skip there to avoid version conflicts.
+# Edit this group as you verify what JAMF installs for your role.
 cask "google-chrome"
-cask "zoom"
-cask "dropbox"
 cask "google-drive"
 cask "microsoft-office"
-cask "adobe-creative-cloud"
-cask "obs"
-cask "google-earth-pro"
+cask "slack"
+cask "zoom"
 {{ end -}}
 
-{{ if .install3DPrinting -}}
-# 3D printing
-cask "prusaslicer"
-cask "autodesk-fusion"
-{{ end -}}
+# Mac App Store apps. Requires being signed in to the App Store first (see the
+# Pre-Chezmoi Prerequisites section of SETUP.md). `brew bundle` runs `mas install`
+# under the hood, which fails if not signed in.
+mas "Speedtest", id: 1153157709
+mas "Blackmagic Disk Speed Test", id: 425264550

@@ -73,6 +73,7 @@ anything in the "Skipped on BambooHR Machines" opt-out list below.
 - Google Drive
 - Google Earth Pro
 - Granola (AI-powered meeting notepad)
+- Ice (menu bar manager)
 - Microsoft Office
 - OBS (install only; scenes/profiles configured separately)
 - Prusa Slicer

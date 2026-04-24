@@ -64,7 +64,9 @@ anything in the "Skipped on BambooHR Machines" opt-out list below.
 - Adobe Creative Cloud (launcher only; specific Creative Cloud apps to install is deferred — see Deferred / Open Questions)
 - Bambu Studio
 - Canon Professional Print & Layout (manual — Canon installer, no Homebrew cask)
+- ChatGPT (OpenAI desktop app)
 - Claude (desktop app, via Homebrew cask `claude`; auto-updates)
+- Codex (OpenAI desktop app for managing coding agents; the `codex-app` cask — distinct from the `codex` CLI)
 - Cursor
 - Dropbox
 - Autodesk Fusion
@@ -108,6 +110,7 @@ Pre-Chezmoi Prerequisites first.
 
 - Speedtest by Ookla (desktop companion to the Ookla CLI)
 - BlackMagic Disk Speed Test
+- One Markdown (markdown editor)
 
 ## CLI Tools
 
@@ -117,6 +120,7 @@ Pre-Chezmoi Prerequisites first.
 - Node.js / npm
 - Ookla Speedtest CLI (official `speedtest` binary from the `teamookla/speedtest` tap; supersedes the community `speedtest-cli`)
 - Claude Code (installed via Anthropic's native installer to `~/.local/bin/claude`; auto-updates in the background — Homebrew cask is intentionally avoided because it lags behind upstream releases)
+- Codex CLI (OpenAI's terminal coding agent, installed via the `codex` Homebrew cask — distinct from the `codex-app` desktop app)
 - Xcode Command Line Tools (via run_once script, not Brewfile; sufficient for `make`, `gcc`, native Python extensions, and git. Full Xcode.app is intentionally not installed)
 - `mas` (Mac App Store CLI; used for the App Store apps above)
 - `dockutil` (for reproducible dock-contents automation)
@@ -151,6 +155,10 @@ settings unless noted.
 - Hot corners: top-left = start screen saver, bottom-right = disable screen saver / stay awake (code 6)
 - Screensaver: require password 2 seconds after screensaver/sleep begins
 - Computer hostname: set from prompted value (skipped on BambooHR machines — Jamf enforces its own naming convention and overwrites any changes)
+- Sound: alert volume set to 0, silencing notification and alert sounds globally (screenshot shutter goes quiet as a side effect)
+- Sound: UI sound effects off (Finder drag/trash/etc.)
+- Sound: volume-change feedback beep off
+- Sound: power adapter / MagSafe connect chime off (startup chime is intentionally left alone)
 
 ## Post-Install Automated Tasks
 
@@ -182,14 +190,19 @@ These are intentional TODOs — decide the specifics, then fold them in.
 These are presented as a checklist after `chezmoi apply` completes.
 
 - Set up Apple Pay
-- Disable notifications for Notes.app (System Settings → Notifications → Notes → Allow Notifications off — modern macOS doesn't expose a reliable `defaults` key for this)
+- Disable notifications for these apps (System Settings → Notifications → *app* → Allow Notifications off — modern macOS doesn't expose a reliable `defaults` key for this): Notes, Photos
 - Enable Unlock with Apple Watch (System Settings → Touch ID & Password — requires a paired Apple Watch and can't be scripted)
 - Install 1Password browser extensions in Safari and Chrome, then sign in to 1Password
 - Sign in to Google Chrome profiles and enable sync
+- Install Gmail and Google Calendar as Chrome apps (open `mail.google.com` and `calendar.google.com` in Chrome → ⋮ menu → *Cast, save, and share* → *Install page as app*)
 - Sign in to Adobe Creative Cloud (and choose the specific apps to install)
 - Sign in to Cursor (OAuth — can't be automated)
 - Sign in to the Claude desktop app
+- Sign in to the ChatGPT desktop app
+- Sign in to the Codex desktop app
+- Sign in to Zoom
 - Run `claude` and sign in to Claude Code (OAuth — can't be automated)
+- Run `codex` and sign in to Codex CLI (OAuth — can't be automated)
 - Run `gh auth login`
 - Install Canon Professional Print & Layout (download from Canon)
 - Set up home printers, including the Pro-4000

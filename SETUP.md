@@ -24,8 +24,13 @@ later steps depend on them.
 Open Terminal.app and run:
 
 ```sh
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply ryanpacker/dotfiles
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$(mktemp -d)" init --apply ryanpacker/dotfiles
 ```
+
+`-b "$(mktemp -d)"` puts the bootstrap chezmoi binary in a temp directory
+instead of `./bin` (the installer's default), so running this from `~`
+doesn't leave behind a `~/bin/chezmoi` orphan. The Brewfile installs the
+canonical, auto-updating copy at `/opt/homebrew/bin/chezmoi` shortly after.
 
 For subsequent updates on an already-configured machine:
 

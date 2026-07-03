@@ -39,7 +39,7 @@ _r9_pick () {
 
       trap 'print -n $'\''\e[?25h'\'' > /dev/tty' INT TERM   # never leave cursor hidden
       print -n $'\e[?25l' > $tty                            # hide cursor while drawing
-      print -r -- $'\e[1mLaunch r9os with which profile?\e[0m' > $tty
+      print -r -- $'\e[1mSelect r9os profile below:\e[0m' > $tty
       print -r -- $'\e[2m  ↑/↓ or 1-2  ·  enter to select  ·  q to cancel\e[0m' > $tty
 
       while true; do
@@ -47,7 +47,7 @@ _r9_pick () {
             for (( i = 1; i <= n; i++ )); do
                   print -n $'\e[2K\r' > $tty              # clear the row before redraw
                   if (( i == sel )); then
-                        print -r -- $'  \e[36m❯\e[0m \e[1;36m'"${i}. ${labels[i]}"$'\e[0m' > $tty
+                        print -r -- $'  \e[32m❯ '"${i}. ${labels[i]}"$'\e[0m' > $tty
                   else
                         print -r -- $'    \e[2m'"${i}. ${labels[i]}"$'\e[0m' > $tty
                   fi

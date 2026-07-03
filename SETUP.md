@@ -221,3 +221,4 @@ These are presented as a checklist after `chezmoi apply` completes.
 ## To Add
 
 These are tasks that need to be evaluated to determine where they should be placed in the flow. They should be removed from the list below once they are added to the right place above.
+- Set the finder preference to have new windows open to the home directory instead of recents

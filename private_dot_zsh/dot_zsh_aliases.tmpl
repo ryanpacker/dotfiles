@@ -26,6 +26,59 @@ cc-bhr () {
       CLAUDE_CONFIG_DIR="$HOME/.claude-bhr" command claude "$@"
 }
 
+# Interactive profile picker for r9: a highlighted list you drive with the
+# arrow keys (or j/k), Enter to confirm, number keys as a shortcut, q/Esc to
+# cancel. Draws the UI to the TTY and echoes the chosen profile on stdout, so
+# the caller can capture it with $(...).
+_r9_pick () {
+      emulate -L zsh                                   # sets LOCAL_OPTIONS + LOCAL_TRAPS
+      local tty=/dev/tty
+      local -a labels=( "Personal  (cc)" "Work      (cc-bhr)" )
+      local -a values=( personal work )
+      local n=${#labels} sel=1 first=1 key i k2 k3
+
+      trap 'print -n $'\''\e[?25h'\'' > /dev/tty' INT TERM   # never leave cursor hidden
+      print -n $'\e[?25l' > $tty                            # hide cursor while drawing
+      print -r -- $'\e[1mLaunch r9os with which profile?\e[0m' > $tty
+      print -r -- $'\e[2m  ↑/↓ or 1-2  ·  enter to select  ·  q to cancel\e[0m' > $tty
+
+      while true; do
+            if (( first )); then first=0; else print -n $'\e['"$n"'A' > $tty; fi
+            for (( i = 1; i <= n; i++ )); do
+                  print -n $'\e[2K\r' > $tty              # clear the row before redraw
+                  if (( i == sel )); then
+                        print -r -- $'  \e[36m❯\e[0m \e[1;36m'"${i}. ${labels[i]}"$'\e[0m' > $tty
+                  else
+                        print -r -- $'    \e[2m'"${i}. ${labels[i]}"$'\e[0m' > $tty
+                  fi
+            done
+
+            IFS= read -rsk 1 key < $tty || { sel=0; break; }
+            case "$key" in
+                  $'\e')                                  # escape: maybe an arrow key
+                        if IFS= read -rsk 1 -t 0.4 k2 < $tty && [[ $k2 == '[' || $k2 == 'O' ]]; then
+                              IFS= read -rsk 1 -t 0.4 k3 < $tty
+                              case "$k3" in
+                                    A) (( sel = sel > 1 ? sel - 1 : n )) ;;   # up
+                                    B) (( sel = sel < n ? sel + 1 : 1 )) ;;   # down
+                              esac
+                        else
+                              sel=0; break                # bare Esc -> cancel
+                        fi ;;
+                  k|K) (( sel = sel > 1 ? sel - 1 : n )) ;;
+                  j|J) (( sel = sel < n ? sel + 1 : 1 )) ;;
+                  [1-9]) if (( key <= n )); then sel=$key; break; fi ;;
+                  $'\n'|$'\r'|'') break ;;                 # Enter -> confirm current
+                  q|Q|$'\x03') sel=0; break ;;             # q / Ctrl-C -> cancel
+            esac
+      done
+
+      print -n $'\e[?25h' > $tty                         # restore cursor
+      print -r -- '' > $tty
+      (( sel == 0 )) && return 1
+      print -r -- "${values[sel]}"
+}
+
 r9 () {
       local dir="$HOME/Projects/r9os"
       cd "$dir" || { print -u2 "r9: cannot cd to $dir"; return 1 }
@@ -36,7 +89,7 @@ r9 () {
             -b|--bhr|--work)   profile=work; shift ;;
             -h|--help)
                   print "r9: cd to r9os and launch Claude Code."
-                  print "  r9                    prompt for profile (single keypress)"
+                  print "  r9                    interactive profile picker (arrows / numbers)"
                   print "  r9 -p | --personal    personal profile (cc)"
                   print "  r9 -b | --bhr|--work  work profile (cc-bhr)"
                   print "  extra args pass through to claude, e.g. r9 -p --resume"
@@ -44,18 +97,7 @@ r9 () {
       esac
 
       if [[ -z "$profile" ]]; then
-            print "Launch r9os with which profile?"
-            print "  [1/p] personal  (cc)"
-            print "  [2/b] work      (cc-bhr)"
-            local key
-            read -k 1 "key?> "
-            print ""
-            case "$key" in
-                  1|p|P)          profile=personal ;;
-                  2|b|B)          profile=work ;;
-                  $'\n'|$'\r')    profile=personal ;;   # Enter = personal (default)
-                  *)              print -u2 "r9: cancelled."; return 1 ;;
-            esac
+            profile=$(_r9_pick) || { print -u2 "r9: cancelled."; return 1 }
       fi
 
       if [[ "$profile" == work ]]; then

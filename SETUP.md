@@ -55,7 +55,7 @@ Prompted during `chezmoi init` (stored locally, never committed):
 |------|-------------|
 | `.zshenv` | Sets ZDOTDIR=$HOME/.zsh (nothing else) |
 | `.zsh/.zshrc` | Prompt, PATH, tool initialization (Homebrew, nvm, pyenv, uv, bun) |
-| `.zsh/.zsh_aliases` | Shell aliases |
+| `.zsh/.zsh_aliases` | Shell aliases + Claude Code launchers: `cc` (personal profile), `cc-bhr` (work/BambooHR profile), `r9` (cd to r9os and pick a profile via an interactive menu) |
 | `.gitconfig` | User identity, LFS, credential helpers (GitHub, Forgejo) |
 | `.config/ghostty/config` | Terminal: Catppuccin Mocha, JetBrains Mono, splits, keybinds |
 | `Library/Application Support/Terminal/RDP Custom.terminal` | Terminal.app custom profile (committed to chezmoi so it works offline and stays version-controlled) |

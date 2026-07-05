@@ -123,7 +123,7 @@ Pre-Chezmoi Prerequisites first.
 - gh (GitHub CLI)
 - git
 - Node.js / npm
-- Ookla Speedtest CLI (official `speedtest` binary from the `teamookla/speedtest` tap; supersedes the community `speedtest-cli`)
+- No speedtest CLI (the Speedtest GUI app comes from the Mac App Store above; for command-line checks use macOS's built-in `networkQuality`. The Ookla tap was dropped 2026-07 to keep the Brewfile free of third-party taps — Homebrew now requires per-tap trust, which broke unattended `chezmoi apply`)
 - Claude Code (installed via Anthropic's native installer to `~/.local/bin/claude`; auto-updates in the background — Homebrew cask is intentionally avoided because it lags behind upstream releases)
 - Codex CLI (OpenAI's terminal coding agent, installed via the `codex` Homebrew cask — distinct from the `codex-app` desktop app)
 - Xcode Command Line Tools (via run_once script, not Brewfile; sufficient for `make`, `gcc`, native Python extensions, and git. Full Xcode.app is intentionally not installed)

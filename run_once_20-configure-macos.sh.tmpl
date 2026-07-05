@@ -57,12 +57,15 @@ defaults write -g com.apple.sound.beep.feedback -int 0
 defaults write com.apple.PowerChime ChimeOnAllHardware -bool false
 killall PowerChime 2>/dev/null || true
 
-# Desktop widgets: best-effort clear. The per-user widget store lives in
-# ~/Library/Containers/com.apple.chronod — deleting its state DB removes
-# any widgets set up by the Setup Assistant or migrated from a prior Mac.
-# Safe to run even if the path doesn't exist.
-rm -f "$HOME/Library/Containers/com.apple.chronod/Data/Library/Preferences/com.apple.chronod.plist" 2>/dev/null || true
-killall chronod 2>/dev/null || true
+# Desktop widgets: hide them on the desktop — the "Show Widgets → On Desktop"
+# checkbox in Settings → Desktop & Dock. StandardHideWidgets=true unchecks it.
+# (Supersedes an older approach that rm'd chronod's store at a path which no
+# longer exists on current macOS and silently did nothing — the toggle is the
+# supported lever and leaves "In Stage Manager" widgets alone.)
+defaults write com.apple.WindowManager StandardHideWidgets -bool true
+
+# Click wallpaper to reveal desktop: only in Stage Manager, not "Always".
+defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
 
 # Default browser: Chrome. Skipped on BambooHR machines where Chrome comes
 # from JAMF and may not be installed yet when this script runs.
@@ -76,5 +79,6 @@ fi
 killall Dock 2>/dev/null || true
 killall Finder 2>/dev/null || true
 killall SystemUIServer 2>/dev/null || true
+killall WindowManager 2>/dev/null || true
 
 echo "macOS configured."

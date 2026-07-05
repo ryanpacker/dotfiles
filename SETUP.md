@@ -47,7 +47,9 @@ Prompted during `chezmoi init` (stored locally, never committed):
 - BambooHR-managed machine (only asked on work machines; controls Jamf-aware behavior like skipping hostname configuration and the BHR opt-out app list)
 - Full name and email (for git)
 - NAS IP and SSH username
-- Forgejo domain
+- Forgejo domain, username, and (on machines granted it) the classified repo name —
+  blank answers skip the related features; the classified prompt is the per-machine
+  need-to-know gate for the sensitive repo
 
 ## Dotfiles
 
@@ -55,8 +57,9 @@ Prompted during `chezmoi init` (stored locally, never committed):
 |------|-------------|
 | `.zshenv` | Sets ZDOTDIR=$HOME/.zsh (nothing else) |
 | `.zsh/.zshrc` | Prompt, PATH, tool initialization (Homebrew, nvm, pyenv, uv, bun) |
-| `.zsh/.zsh_aliases` | Shell aliases + Claude Code launchers: `cc` (personal profile), `cc-bhr` (work/BambooHR profile), `r9` (cd to r9os and pick a profile via an interactive menu) |
+| `.zsh/.zsh_aliases` | Shell aliases + Claude Code launchers: `cc` (personal profile), `cc-bhr` (work/BambooHR profile), `r9` (cd to r9os and pick a profile via an interactive menu; first run on a fresh machine offers to clone the repo(s) from the home forge) |
 | `.gitconfig` | User identity, LFS, credential helpers (GitHub, Forgejo) |
+| `.config/forgejo/credential-helper.sh` | Git credential helper for the home forge: reads the PAT live from 1Password (`op read`; `FORGEJO_OP_REF` overrides the item ref, `FORGEJO_TOKEN` injects a raw token for headless runs), sits behind git's in-memory `cache` helper — the token never touches disk; only rendered when a Forgejo domain is configured |
 | `.config/ghostty/config` | Terminal: Catppuccin Mocha, JetBrains Mono, splits, keybinds |
 | `Library/Application Support/Terminal/RDP Custom.terminal` | Terminal.app custom profile (committed to chezmoi so it works offline and stays version-controlled) |
 

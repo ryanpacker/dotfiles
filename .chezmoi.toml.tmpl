@@ -39,6 +39,18 @@
 {{-   $nasUser = promptString "NAS SSH username" .chezmoi.username -}}
 {{- end -}}
 {{- $forgejoDomain := promptStringOnce . "forgejoDomain" "Forgejo domain (blank if none, e.g. forge.example.com)" -}}
+{{- $forgejoUser := "" -}}
+{{- $r9osClassifiedRepo := "" -}}
+{{- if ne $forgejoDomain "" -}}
+{{-   if hasKey . "forgejoUser" -}}
+{{-     $forgejoUser = .forgejoUser -}}
+{{-   else -}}
+{{-     $forgejoUser = promptString "Forgejo username" .chezmoi.username -}}
+{{-   end -}}
+{{- /* Blank means this machine is not granted the classified tier: the r9
+       launcher will never offer to clone it. Name it only on trusted machines. */ -}}
+{{-   $r9osClassifiedRepo = promptStringOnce . "r9osClassifiedRepo" "r9os classified repo name (blank if this machine doesn't hold the classified tier)" -}}
+{{- end -}}
 
 [data]
     computerName = {{ $computerName | quote }}
@@ -50,3 +62,5 @@
     nasIP = {{ $nasIP | quote }}
     nasUser = {{ $nasUser | quote }}
     forgejoDomain = {{ $forgejoDomain | quote }}
+    forgejoUser = {{ $forgejoUser | quote }}
+    r9osClassifiedRepo = {{ $r9osClassifiedRepo | quote }}

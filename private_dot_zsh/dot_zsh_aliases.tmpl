@@ -17,7 +17,9 @@ alias m1mm='ssh {{ .nasUser }}@{{ .nasIP }}'
 # >>> Claude Code launchers >>>
 # cc      = personal profile (default ~/.claude config, permissions bypassed)
 # cc-bhr  = work / BambooHR profile (isolated ~/.claude-bhr config + work token)
-# r9      = cd to r9os, pick a profile, launch Claude Code there
+# r9      = cd to r9os, pick a profile, launch Claude Code there. On a machine
+#           without a checkout, first run offers to clone it (and, where this
+#           machine is granted it, the classified repo) from the home forge.
 cc () {
       claude --permission-mode bypassPermissions "$@"
 }
@@ -81,6 +83,34 @@ _r9_pick () {
 
 r9 () {
       local dir="$HOME/Projects/r9os"
+
+      # First-run bootstrap: no checkout yet -> offer to clone from the home
+      # forge. Auth comes from the Forgejo credential helper in .gitconfig.
+      if [[ ! -d "$dir/.git" ]]; then
+{{- if and (ne .forgejoDomain "") (ne .forgejoUser "") }}
+            local base="https://{{ .forgejoDomain }}/{{ .forgejoUser }}"
+            print "r9: no r9os checkout at $dir"
+            if ! read -q "?r9: clone it from {{ .forgejoDomain }}? [y/N] "; then
+                  print; return 1
+            fi
+            print
+            git clone "$base/r9os.git" "$dir" || return 1
+{{- if ne .r9osClassifiedRepo "" }}
+            if read -q "?r9: also clone the classified tier ({{ .r9osClassifiedRepo }})? [y/N] "; then
+                  print
+                  git clone "$base/{{ .r9osClassifiedRepo }}.git" "$dir/brain/classified" ||
+                        print -u2 "r9: classified clone failed; continuing without it"
+            else
+                  print
+            fi
+{{- end }}
+{{- else }}
+            print -u2 "r9: no r9os checkout at $dir, and no forge is configured"
+            print -u2 "r9: set forgejoDomain/forgejoUser in chezmoi data, or clone manually"
+            return 1
+{{- end }}
+      fi
+
       cd "$dir" || { print -u2 "r9: cannot cd to $dir"; return 1 }
 
       local profile=""

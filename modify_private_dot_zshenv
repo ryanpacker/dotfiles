@@ -1,0 +1,11 @@
+#!/bin/sh
+# .zshenv has shared ownership: on MDM-managed machines, corporate tooling
+# reasserts its own env block here every few minutes, so a plain chezmoi file
+# would fight it forever. Guarantee the ZDOTDIR line, preserve everything
+# else, and squeeze blank-line runs (the external writer accumulates them).
+
+rest=$(grep -v '^ZDOTDIR=' | cat -s)
+printf 'ZDOTDIR=$HOME/.zsh\n'
+if [ -n "$rest" ]; then
+  printf '%s\n' "$rest"
+fi

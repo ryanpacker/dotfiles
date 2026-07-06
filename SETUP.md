@@ -38,6 +38,37 @@ For subsequent updates on an already-configured machine:
 chezmoi update
 ```
 
+## Bringing an Existing Mac into the Fleet
+
+For a Mac that's already in daily use (apps installed, hand-maintained dotfiles),
+the flow is the same bootstrap with one safety step in the middle — **review the
+diff before applying** so nothing hand-written gets silently replaced:
+
+```sh
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$(mktemp -d)" init ryanpacker/dotfiles   # no --apply
+chezmoi diff        # read this — it's every file that will be overwritten
+chezmoi apply
+```
+
+If `chezmoi diff` shows a file you want to keep pieces of (e.g. an existing
+`~/.ssh/config` or `~/.zshrc`), merge those pieces into the chezmoi source first,
+then apply.
+
+What to expect on an already-provisioned machine:
+
+- **Apps**: `brew bundle` installs casks with `--adopt`, so existing apps in
+  /Applications are registered to Homebrew rather than replaced. Version-drifted
+  apps leave a duplicate staged in the Caskroom; the install script sweeps those
+  and prunes the download cache automatically. pkg-based casks (Office, Zoom,
+  Google Drive) re-run their installers over the existing app — harmless.
+- **Packages**: anything already present is skipped (`--no-upgrade`); the fleet
+  dev stack (PostgreSQL, RabbitMQ, etc.) installs but no services are started.
+- **macOS settings**: the `run_once` defaults script applies the full fleet
+  configuration (Dock, scroll direction, sounds, hot corners, …) — by design,
+  every setting in it is wanted on every machine.
+- **Failures don't block**: if a package fails, the apply still completes
+  (dotfiles, keygen, checklist) and prints a summary of what to fix manually.
+
 ## Machine Configuration
 
 Prompted during `chezmoi init` (stored locally, never committed):
@@ -77,7 +108,7 @@ anything in the "Skipped on BambooHR Machines" opt-out list below.
 - Codex (OpenAI desktop app for managing coding agents; the `codex-app` cask — distinct from the `codex` CLI)
 - Cursor
 - Dropbox
-- Autodesk Fusion
+- Autodesk Fusion (Brewfile-gated: skipped when `/Applications/Autodesk Fusion` already exists — the installer-type cask can't adopt an existing install)
 - Ghostty
 - Google Chrome
 - Google Drive

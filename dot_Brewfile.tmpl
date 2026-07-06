@@ -22,7 +22,11 @@ cask "font-jetbrains-mono"
 cask "1password"
 cask "1password-cli"   # `op` — chezmoi reads secrets (e.g. Forgejo PAT) from 1Password at apply time
 cask "adobe-creative-cloud"
+{{ if not (stat "/Applications/Autodesk Fusion") -}}
+# Installer-type cask (version :latest) — it can't adopt an existing install
+# and re-runs the full Fusion Client Downloader, so skip it once Fusion exists.
 cask "autodesk-fusion"
+{{ end -}}
 cask "bambu-studio"
 cask "chatgpt"
 cask "claude"

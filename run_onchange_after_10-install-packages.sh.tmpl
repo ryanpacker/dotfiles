@@ -1,7 +1,33 @@
 #!/bin/bash
-set -e
+set -u
 
 # Brewfile hash: {{ include "dot_Brewfile.tmpl" | sha256sum }}
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
-brew bundle --global --no-upgrade
+
+# Package failures must not abort the whole apply — dotfile sync and the
+# run_once_after scripts (keygen, post-install, checklist) still matter on a
+# machine where one cask is flaky. Report loudly and keep going; the exit-0 is
+# deliberate.
+if ! brew bundle --global --no-upgrade; then
+    echo ""
+    echo "=========================================================================="
+    echo " ⚠ brew bundle exited non-zero — some packages failed to install."
+    echo "   Unmet entries:"
+    HOMEBREW_BUNDLE_NO_UPGRADE=1 brew bundle check --global --verbose 2>/dev/null | grep '→' || true
+    echo "   Retry manually with: brew bundle --global --no-upgrade"
+    echo "=========================================================================="
+    echo ""
+fi
+
+# brew bundle installs casks with --adopt (bundle/cask.rb appends it). When an
+# already-installed app has drifted from the cask version, adopt leaves the
+# freshly downloaded copy staged in the Caskroom — marked installed but never
+# moved to /Applications. Sweep those duplicates (the /Applications copy is the
+# live one), then prune the download cache. On a fresh machine both are no-ops.
+find "$(brew --prefix)/Caskroom" -maxdepth 3 -name '*.app' -prune 2>/dev/null | while IFS= read -r staged; do
+    if [ -e "/Applications/$(basename "$staged")" ]; then
+        rm -rf "$staged"
+    fi
+done
+brew cleanup --prune=all >/dev/null 2>&1 || true

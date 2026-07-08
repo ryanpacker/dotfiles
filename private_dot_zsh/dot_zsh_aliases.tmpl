@@ -17,33 +17,61 @@ alias nas='ssh {{ .nasUser }}@{{ .nasIP }}'
 {{ end -}}
 
 # >>> Claude Code launchers >>>
-# cc      = personal profile (default ~/.claude config, permissions bypassed)
-# cc-bhr  = work / BambooHR profile (isolated ~/.claude-bhr config + work token)
-# r9      = cd to r9os, pick a profile, launch Claude Code there. On a machine
-#           without a checkout, first run offers to clone it (and, where this
-#           machine is granted it, the classified repo) from the home forge.
-cc () {
+# cc      = launch Claude Code. Bare `cc` opens the profile picker; skip it
+#           with --personal / --work (first arg only; everything else passes
+#           through to claude). Non-interactive callers default to personal.
+# cc-bhr  = back-compat alias for the work profile; prefer `cc --work`
+# r9      = cd to r9os, then cc (same picker / flags). On a machine without
+#           a checkout, first run offers to clone it (and, where this machine
+#           is granted it, the classified repo) from the home forge.
+_cc_personal () {
       claude --permission-mode bypassPermissions "$@"
 }
 
-cc-bhr () {
-      CLAUDE_CONFIG_DIR="$HOME/.claude-bhr" command claude "$@"
+_cc_work () {
+      CLAUDE_CONFIG_DIR="$HOME/.claude-bhr" command claude --permission-mode acceptEdits "$@"
 }
 
-# Interactive profile picker for r9: a highlighted list you drive with the
+cc () {
+      local profile=""
+      case "$1" in
+            --personal) profile=personal; shift ;;
+            --work)     profile=work; shift ;;
+      esac
+
+      if [[ -z "$profile" ]]; then
+            if [[ -t 0 && -t 1 ]]; then
+                  profile=$(_cc_pick) || { print -u2 "cc: cancelled."; return 1 }
+            else
+                  profile=personal          # no tty (script/pipe): don't hang on the picker
+            fi
+      fi
+
+      if [[ "$profile" == work ]]; then
+            _cc_work "$@"
+      else
+            _cc_personal "$@"
+      fi
+}
+
+cc-bhr () {
+      _cc_work "$@"
+}
+
+# Interactive profile picker: a highlighted list you drive with the
 # arrow keys (or j/k), Enter to confirm, number keys as a shortcut, q/Esc to
 # cancel. Draws the UI to the TTY and echoes the chosen profile on stdout, so
 # the caller can capture it with $(...).
-_r9_pick () {
+_cc_pick () {
       emulate -L zsh                                   # sets LOCAL_OPTIONS + LOCAL_TRAPS
       local tty=/dev/tty
-      local -a labels=( "Personal  (cc)" "Work      (cc-bhr)" )
+      local -a labels=( "Personal" "Work  (bhr)" )
       local -a values=( personal work )
       local n=${#labels} sel=1 first=1 key i k2 k3
 
       trap 'print -n $'\''\e[?25h'\'' > /dev/tty' INT TERM   # never leave cursor hidden
       print -n $'\e[?25l' > $tty                            # hide cursor while drawing
-      print -r -- $'\e[1mSelect r9os profile below:\e[0m' > $tty
+      print -r -- $'\e[1mSelect Claude Code profile below:\e[0m' > $tty
       print -r -- $'\e[2m  ↑/↓ or 1-2  ·  enter to select  ·  q to cancel\e[0m' > $tty
 
       while true; do
@@ -115,27 +143,15 @@ r9 () {
 
       cd "$dir" || { print -u2 "r9: cannot cd to $dir"; return 1 }
 
-      local profile=""
-      case "$1" in
-            -p|--personal)     profile=personal; shift ;;
-            -b|--bhr|--work)   profile=work; shift ;;
-            -h|--help)
-                  print "r9: cd to r9os and launch Claude Code."
-                  print "  r9                    interactive profile picker (arrows / numbers)"
-                  print "  r9 -p | --personal    personal profile (cc)"
-                  print "  r9 -b | --bhr|--work  work profile (cc-bhr)"
-                  print "  extra args pass through to claude, e.g. r9 -p --resume"
-                  return 0 ;;
-      esac
-
-      if [[ -z "$profile" ]]; then
-            profile=$(_r9_pick) || { print -u2 "r9: cancelled."; return 1 }
+      if [[ "$1" == -h || "$1" == --help ]]; then
+            print "r9: cd to r9os and launch Claude Code."
+            print "  r9               interactive profile picker (arrows / numbers)"
+            print "  r9 --personal    personal profile"
+            print "  r9 --work        work profile (bhr)"
+            print "  extra args pass through to claude, e.g. r9 --personal --resume"
+            return 0
       fi
 
-      if [[ "$profile" == work ]]; then
-            cc-bhr "$@"
-      else
-            cc "$@"
-      fi
+      cc "$@"
 }
 # <<< Claude Code launchers <<<

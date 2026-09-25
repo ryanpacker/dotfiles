@@ -1,0 +1,52 @@
+#!/bin/bash
+# Dock app lineup — declarative, per machine class. Mirrored from the M5 MBP
+# lineup 2026-09-25. Removal is an EXPLICIT list of factory items so that
+# system items added by newer macOS (e.g. the macOS 27 "Apps" launcher) are
+# never blindly removed; adds are skipped when the app is not installed
+# (Chrome PWAs like Gmail exist only after they're created on that machine —
+# they join the Dock on a later apply). Stacks (Screenshots, Downloads) are
+# pinned by run_once_after_30-post-install.sh and live in persistentOthers,
+# so this script never touches them.
+set -u
+eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null || true
+command -v dockutil >/dev/null 2>&1 || { echo "dock layout: dockutil not found; skipping"; exit 0; }
+
+{{ if .isWork -}}
+echo "Applying work Dock layout..."
+
+# Factory items we don't want, plus our own targets (removed first so the
+# adds below land in a deterministic order).
+REMOVE=(
+  Safari Mail Maps Photos FaceTime Phone Calendar Contacts Reminders Notes
+  TV Music Keynote Numbers Pages Games "App Store" "iPhone Mirroring" Launchpad
+  "Google Chrome" Gmail "Google Calendar" Messages Slack
+  Zoom "Zoom Client for Meetings" "zoom.us" "Okta Verify" "System Settings"
+)
+for label in "${REMOVE[@]}"; do
+  dockutil --no-restart --remove "$label" >/dev/null 2>&1 || true
+done
+
+# Left-to-right lineup. Paths checked so a missing app skips cleanly.
+ADD=(
+  "/Applications/Google Chrome.app"
+  "$HOME/Applications/Chrome Apps.localized/Gmail.app"
+  "$HOME/Applications/Chrome Apps.localized/Google Calendar.app"
+  "/System/Applications/Messages.app"
+  "/Applications/Slack.app"
+  "/Applications/zoom.us.app"
+  "/Applications/Okta Verify.app"
+  "/System/Applications/System Settings.app"
+)
+for app in "${ADD[@]}"; do
+  if [ -e "$app" ]; then
+    dockutil --no-restart --add "$app" >/dev/null 2>&1 || true
+  else
+    echo "  · skipped (not installed): $app"
+  fi
+done
+
+killall Dock 2>/dev/null || true
+echo "  ✓ work Dock layout applied"
+{{ else -}}
+echo "dock layout: personal machine — app lineup not managed (yet)"
+{{ end -}}

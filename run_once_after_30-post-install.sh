@@ -3,6 +3,11 @@
 # dockutil, defaultbrowser, etc. are available.
 set -u
 
+# The bootstrap shell predates Homebrew, so its PATH lacks /opt/homebrew/bin and
+# every `command -v` guard below silently skips (seen on the M5 Mac mini,
+# 2026-09-24: dockutil installed but Dock contents never configured).
+eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null || true
+
 echo "Running post-install tasks..."
 
 # ---- Screenshots directory ----

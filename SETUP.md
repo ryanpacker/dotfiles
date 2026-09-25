@@ -17,7 +17,9 @@ later steps depend on them.
 - Install any pending macOS software updates
 - Add a fingerprint in System Settings → Touch ID & Password, then enable Touch ID
 - Sign in to iCloud (required for any iCloud-synced settings and files below)
-- Sign in to the Mac App Store (required so `mas` can install App Store apps later)
+- Verify App Store sign-in (automatic when you sign in to iCloud) — download one
+  free app to clear any first-run billing/terms prompt, so `mas` can install App
+  Store apps later
 
 ## Bootstrap (Fresh Mac)
 
